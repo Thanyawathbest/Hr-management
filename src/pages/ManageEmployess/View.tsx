@@ -39,7 +39,8 @@ const ManageEmployees = () => {
     const fetchEmployees = async () => {
       setLoading(true);
       try{
-        const res = await axios.get<ApiResponse>("http://localhost:3000/employees");
+        const res = await axios.get<ApiResponse>(`${import.meta.env.VITE_API_URL}/employees`);
+        console.log(`${import.meta.env.VITE_API_URL}/employees`);
         console.log(res.data);
         setEmployees(res.data.data);
       } catch (err) {
