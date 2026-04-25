@@ -16,6 +16,7 @@ const App = () => {
       <Route path="Home" element={<Home />} >
         <Route path="ManageEmployees" element={<ManageEmployees />} />
         <Route path="ManageEmployees/Add" element={<ManageEmployees_add/>} />
+        <Route path="ManageEmployees/edit/:id" element={<ManageEmployees_add/>} />
       </Route>
 
       

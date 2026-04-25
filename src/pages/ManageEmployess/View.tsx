@@ -106,7 +106,7 @@ const ManageEmployees = () => {
                 </TableCell>
                 <TableCell>
                   <Box sx={{ display: "flex", gap: 1 }}>
-                    <Button variant="outlined" size="small">
+                    <Button variant="outlined" size="small" onClick={() => navigate(`/Home/ManageEmployees/edit/${emp.id}`)}>
                       Edit
                     </Button>
                   </Box>
