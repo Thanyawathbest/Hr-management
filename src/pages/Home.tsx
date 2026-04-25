@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,29 +10,67 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-// import InboxIcon from "@mui/icons-material/MoveToInbox";
-
 import LogoutIcon from "@mui/icons-material/Logout";
 import Avatar from "@mui/material/Avatar";
 import PersonIcon from "@mui/icons-material/Person";
-// import ListSubheader from "@mui/material/ListSubheader";
-// import EventIcon from '@mui/icons-material/Event';
-// import NotificationsIcon from '@mui/icons-material/Notifications';
-// import SettingsIcon from '@mui/icons-material/Settings';
-// import MailIcon from '@mui/icons-material/Mail';
 import BusinessIcon from "@mui/icons-material/Business";
-import { useNavigate } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useNavigate, Outlet } from "react-router-dom";
 
 const drawerWidth = 240;
 
 const Home = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  // console.log("isMobile:", isMobile);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const menuItems = [
-    // { text: "Dashboard", path: "Dashboard" },
     { text: "Manage Employees", path: "ManageEmployees" },
   ];
-  const icons = [ <PersonIcon />];
+  const icons = [<PersonIcon key="person-icon" />];
+
+  const handleDrawerToggle = () => {
+    setMobileOpen((prev) => !prev);
+  };
+
+  const drawerContent = (
+    <>
+      <Toolbar />
+      <Box sx={{ overflow: "auto" }}>
+        <List>
+          <Typography variant="body2" sx={{ fontWeight: "bold", m: 2 }}>
+            MAIN MENU
+          </Typography>
+          {menuItems.map((item, idx) => (
+            <ListItem key={item.text} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  navigate(item.path);
+                  if (isMobile) setMobileOpen(false);
+                }}
+              >
+                <ListItemIcon>{icons[idx]}</ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  sx={{
+                    "& .MuiListItemText-primary": {
+                      fontSize: 14,
+                      fontWeight: 500,
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </>
+  );
+
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
@@ -39,18 +78,28 @@ const Home = () => {
         color="default"
         elevation={0}
         sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
+          zIndex: (zTheme) => zTheme.zIndex.drawer + 1,
           borderBottom: 1,
           borderColor: "divider",
         }}
       >
         <Toolbar>
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 1, display: { xs: "inline-flex", md: "none" } }}
+            aria-label="open menu"
+          >
+            <MenuIcon />
+          </IconButton>
+
           <Box
             sx={{
               width: 36,
               height: 36,
               borderRadius: 2,
-              backgroundColor: "#2563EB", // น้ำเงิน
+              backgroundColor: "#2563EB",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -59,17 +108,14 @@ const Home = () => {
           >
             <BusinessIcon sx={{ color: "#fff", fontSize: 20 }} />
           </Box>
+
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             HRM
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />
 
-          <IconButton
-            onClick={() => {
-              navigate("/");
-            }}
-          >
+          <IconButton onClick={() => navigate("/")}>
             <LogoutIcon />
           </IconButton>
 
@@ -82,9 +128,11 @@ const Home = () => {
           <Avatar sx={{ width: 30, height: 30 }} />
         </Toolbar>
       </AppBar>
+
       <Drawer
         variant="permanent"
         sx={{
+          display: { xs: "none", md: "block" },
           width: drawerWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
@@ -93,31 +141,25 @@ const Home = () => {
           },
         }}
       >
-        <Toolbar />
-        <Box sx={{ overflow: "auto" }}>
-          <List>
-            <Typography variant="body2" sx={{ fontWeight: "bold", m: 2 }}>
-              MAIN MENU
-            </Typography>
-            {menuItems.map((item, idx) => (
-              <ListItem key={item.text} disablePadding>
-                <ListItemButton onClick={() => navigate(item.path)}>
-                  <ListItemIcon>{icons[idx]}</ListItemIcon>
-                  <ListItemText
-                    primary={item.text}
-                    sx={{
-                      "& .MuiListItemText-primary": {
-                        fontSize: 14,
-                        fontWeight: 500,
-                      },
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
+        {drawerContent}
       </Drawer>
+
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: "block", md: "none" },
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
+
       <Box
         component="main"
         sx={{
@@ -133,4 +175,5 @@ const Home = () => {
     </Box>
   );
 };
+
 export default Home;
