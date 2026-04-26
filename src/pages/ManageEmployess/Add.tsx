@@ -46,7 +46,7 @@ const ManageEmployees_add = () => {
     if (!isEditMode) return;
     const fetchEmployeeById = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/employees/edit/${id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/employees/edit/${id}`);
         console.log(res.data);
         const emp = res.data.data;
         setName(emp.name);
@@ -75,9 +75,9 @@ const ManageEmployees_add = () => {
       };
       try{
         if (isEditMode) {
-          await axios.put(`http://localhost:3000/employees/update/${id}`, body);
+          await axios.put(`${import.meta.env.VITE_API_URL}/employees/update/${id}`, body);
         } else {
-          await axios.post("http://localhost:3000/employees/add", body);
+          await axios.post(`${import.meta.env.VITE_API_URL}/employees/add`, body);
         }
         navigate("/Home/ManageEmployees");
       } catch (error: any) {
